@@ -1,6 +1,24 @@
 @extends('backend.layouts.main')
 
 @section('content')
+
+    @if(session('success'))
+        <script>
+             setTimeout(function(){ $("#div").fadeOut(); }, 5000);
+        </script>
+        <div id="div" class="alert alert-success">
+            {{session('success')}}
+        </div>
+    @endif
+    @if (session('error'))
+        <script>
+            setTimeout(function(){ $("#div").fadeOut(); }, 5000);
+        </script>
+        <div id="div" class="alert alert-error">
+            {{session('error')}}
+        </div>
+    @endif
+
         <!-- /.card-header -->
         <div class="card-body">
         <a href="{{route('personalcontact.create')}}">
@@ -22,22 +40,28 @@
                     <td tabindex="0" class="sorting_1">{{$info->name}}</td>
                     <td>{{$info->email}}</td>
                     <td>{{$info->phone}}</td>
-                    <td>{{$info->image}}</td>
                     <td>
-                        <a class="btn btn-app">
-                            <span class="badge bg-purple">891</span>
+                        <img src="{{asset('images/'.$info->image)}}" width="60px" height="60px">
+                    </td>
+                    <td>
+                        <a class="btn btn-app" href="{{route('personalcontact.create')}}">
+                            {{-- <span class="badge bg-purple">891</span> --}}
                             <i class="fas fa-users"></i> Usuários
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-app">
+                        <a class="btn btn-app" href="{{route('personalcontact.edit', $info->id)}}">
                             <i class="fas fa-edit"></i> Editar
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-app">
-                            <i class="fas fa-delete"></i> Deletar
-                        </a>
+                        <form action="{{route('personalcontact.destroy', $info->id)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-app">
+                                <i class="fas fa-trash-alt"></i> Deletar
+                            </button>
+                        </form>
                     </td>
                     </tr>
                  @endforeach
